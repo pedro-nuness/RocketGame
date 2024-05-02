@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="assets/src/css/styles.css">
+    <title>Vite + React</title>
+  </head>
+  <body>
+    <div id="root">
+
+      <div id="controllers">
+
+        <div class="state">
+          <div class="state_bar">
+            <div class="state_bar_progress" id="speed">
+
+            </div>
+          </div>
+
+          <span class="state_info">
+              Speed
+          </span>
+
+
+        </div>
+
+        <div class="state">
+          <div class="state_bar">
+            <div class="state_bar_progress" id="acceleration">
+              
+            </div>
+          </div>
+
+          <span class="state_info">
+            Acceleration
+          </span>
+
+
+        </div>
+
+      </div>
+
+
+      <div id="rocket">
+       <img id="rocket_img" src="assets/sprites/RocketStartup/Sprites/sprite_0.png">
+      </div>
+
+    </div>
+    <script type="module" src="./assets/src/react/Rocket/RocketController.jsx"></script>
+  </body>
+</html>

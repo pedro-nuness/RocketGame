@@ -1,0 +1,19 @@
+#rocket{
+    position: absolute;
+    height: 100px;
+    width: 60px;
+    left: 50%;
+    top: 80%;
+    border: 1px solid black;
+   
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    place-items: flex-end;
+}
+
+#rocket_img{
+
+object-fit: cover;
+}
