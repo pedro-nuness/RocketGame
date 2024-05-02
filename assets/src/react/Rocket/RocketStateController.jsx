@@ -15,7 +15,7 @@ function playSound(Obj, volume) {
 function calculateDeltaTime(previousTime) {
     const deltaTimeMs = new Date().getTime() - previousTime;
     const deltaTimeSec = deltaTimeMs / 1000; // Convert milliseconds to seconds
-    return deltaTimeSec;
+    return parseFloat(deltaTimeSec.toFixed(2)); // Round the result to the specified number of decimal places
 }
 
 var SecondAudio;
@@ -35,12 +35,14 @@ class RocketSpriteController {
        
         if(!this.audio){
           this.audio = playSound(EngineStart, 1);
-            this.now_time = new Date().getTime();
+          this.now_time = new Date().getTime();
         }
 
-        const deltaTime = calculateDeltaTime(this.now_time);
-        if (deltaTime >= 13) {
-            if(!this.intervalFunction){         
+        let deltaTime = calculateDeltaTime(this.now_time);
+
+        switch(deltaTime){
+            case 13:
+                if(!this.intervalFunction){         
                     this.intervalFunction = setInterval(() => {
                         if (this.currentSpriteIdx < 28) {
                             this.currentSpriteIdx++;
@@ -52,21 +54,19 @@ class RocketSpriteController {
                             this.currentSpriteIdx = 0;
                         }
                     }, 100);
-        
-            }else {
-                if(this.currentSpriteIdx >= 28){
-                        clearInterval(this.intervalFunction);
-                        this.intervalFunction = null;
-                       
                 }
+                break;
 
-              
-    
-            }
-        }else if(deltaTime >= 12)
-            if(!SecondAudio)
-            SecondAudio = playSound(EngineLaunch, 0.7);
-
+                case 12:
+                    if(!SecondAudio)
+                        SecondAudio = playSound(EngineLaunch, 0.7);
+                break;
+        }
+   
+        if(this.currentSpriteIdx >= 28){
+            clearInterval(this.intervalFunction);
+            this.intervalFunction = null;                 
+        }          
         return this.currentSpriteIdx;
     }
 

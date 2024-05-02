@@ -140,7 +140,7 @@ class Rocket{
                 this.current_rotation_angle += this.turn_power;
                 break
             case 0:
-                this.current_rotation_angle -=  this.turn_power;
+                this.current_rotation_angle -=  this.turn_power;           
                 break;
         }
 
