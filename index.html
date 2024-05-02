@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-brwww">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
@@ -9,45 +9,33 @@
   </head>
   <body>
     <div id="root">
-
       <div id="controllers">
-
+        <div class="velocimeter">
+          <div class="velocimeter_bars">
+            <div class="velocimeter_neddle" id="speed_neddle"></div>
+            </div>
+        </div>
+  
         <div class="state">
           <div class="state_bar">
-            <div class="state_bar_progress" id="speed">
-
-            </div>
+            <div class="state_bar_progress" id="speed"></div>
           </div>
-
-          <span class="state_info">
-              Speed
-          </span>
-
-
+          <span class="state_info">Speed</span>
         </div>
-
+  
         <div class="state">
           <div class="state_bar">
-            <div class="state_bar_progress" id="acceleration">
-              
-            </div>
+            <div class="state_bar_progress" id="acceleration"></div>
           </div>
-
-          <span class="state_info">
-            Acceleration
-          </span>
-
-
+          <span class="state_info">Acceleration</span>
         </div>
-
       </div>
-
-
+  
       <div id="rocket">
-       <img id="rocket_img" src="assets/sprites/RocketStartup/Sprites/sprite_0.png">
+        <span id="info" style="color: white;"></span>
+        <img id="rocket_img" src="assets/sprites/RocketStartup/Sprites/sprite_0.png">
       </div>
-
     </div>
     <script type="module" src="./assets/src/react/Rocket/RocketController.jsx"></script>
   </body>
-</html>
+  </html>

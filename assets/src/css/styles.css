@@ -1,13 +1,19 @@
 @import url(controllers.css);
 @import url(rocket.css);
 
+body{
+    background-image: url("../../img/space_background.jpg");
+    background-position: bottom;
+}
+
 #root {
     display: flex;
     align-items: flex-end;
     height: 95%;
     width: 98%;
-    border: 1px solid;
-}
+  
+    
+}   
   
 html{
     display: flex;
@@ -20,7 +26,6 @@ html{
 body {
     height: 99vh;
     width: 99vw;
-    border: 1px solid;
     margin: 0;
     display: flex;
     justify-content: center;

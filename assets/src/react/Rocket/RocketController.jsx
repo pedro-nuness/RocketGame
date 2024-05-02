@@ -7,7 +7,7 @@ let RocketIMG = document.getElementById("rocket_img");
 let RocketHeight = RocketObj.offsetHeight;
 
 
-var SpaceShip = new Rocket(1000, 1, 100, 1, 1)
+var SpaceShip = new Rocket(1000, 1, 100, 1, 3)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
@@ -38,7 +38,9 @@ const CURRENT_STATE = {
     STOPPING_BOOST: 7
 };
 
-
+function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 
 class Controller{
@@ -54,7 +56,7 @@ class Controller{
         this.CurrentSpriteIDX = 0;
     }
 
- 
+    
 
     AdjustState(){
         switch(SpaceShip.GetCurrentState()){
@@ -74,8 +76,6 @@ class Controller{
                 return false;
        } 
         
-
-
         return false;
     }
 
@@ -143,6 +143,20 @@ class Controller{
         this.AdjustPosition();
         SpaceShip.AdjustHeight();  
     }
+
+    ControlVelocimeter(Velocimeter, SpeedPercentage){
+        //Starts on left, got do it for the right side, start on -89
+        //Max = -89deg
+        let Neddle = document.getElementById(Velocimeter);
+        let Angle = Math.min(( SpeedPercentage * 0.85 ) * 2, 170);
+       
+        if(SpeedPercentage >= 99){
+            //Neddle shake on high speeds
+            Angle += getRandomNumber(-1, 1);
+        }
+
+        Neddle.style.rotate = Angle + "deg";
+    }
 };
 
 //define screen limits
@@ -193,9 +207,18 @@ function Update(){
     });
 
 
+
+    let FixedHeight = SpaceShip.GetHeight() / 40;
+    let FixedHorizontal = -SpaceShip.GetHorizontalPosition() / 40;
+
+    document.body.style.backgroundPositionY = FixedHeight +'px';
+    document.body.style.backgroundPositionX = FixedHorizontal +'px';
+
     let CurrentAcceleration = SpaceShip.GetCurrentAccelerationPercentage() * 100;
-    let CurrentSpeed = calcularVelocidadeRealXY(SpaceShip.GetHorizontalSpeed(), SpaceShip.GetVerticalSpeed()) /
-     SpaceShip.GetMaxSpeed() * 100;
+    let CurrentSpeed = calcularVelocidadeRealXY(SpaceShip.GetHorizontalSpeed(), SpaceShip.GetVerticalSpeed()) /  SpaceShip.GetMaxSpeed() * 100;
+
+     Control.ControlVelocimeter("speed_neddle", CurrentSpeed);
+
 
     document.getElementById("acceleration").style.height = CurrentAcceleration + "%";
     document.getElementById("speed").style.height = CurrentSpeed + "%";

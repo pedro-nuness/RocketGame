@@ -1,5 +1,5 @@
 
-const Gravity = 0.1;
+const Gravity = 0.2;
 const AirFriction = 0.1;
 
 const CURRENT_STATE = {
@@ -11,6 +11,24 @@ const CURRENT_STATE = {
     WOKING_BOOST: 6,
     STOPPING_BOOST: 7
 };
+
+// Função para calcular o ângulo em graus entre -180 e 180
+function calcularAngulo(velocidadeHorizontal, velocidadeVertical) {
+    // Calcula o ângulo em radianos usando a função atan2
+    var radianos = Math.atan2(velocidadeHorizontal, velocidadeVertical);
+
+    // Converte de radianos para graus
+    var graus = radianos * (180 / Math.PI);
+    // Ajusta o ângulo para o intervalo de -180 a 180 graus
+    if (graus > 180) {
+        graus -= 360;
+    } else if (graus < -180) {
+        graus += 360;
+    }
+    // Retorna o ângulo ajustado em graus
+    return graus;
+}
+
 
 
 class Rocket{
@@ -113,6 +131,10 @@ class Rocket{
         return this.current_height;
     }
 
+    GetHorizontalPosition(){
+        return this.current_horizontal_position;
+    }
+
     GetCurrentState(){
         return this.current_rocket_state;
     }
@@ -124,10 +146,8 @@ class Rocket{
             this.current_height += this.vertical_speed ;
         }
       
-        this.current_horizontal_position += this.horizontal_speed; 
+        this.current_horizontal_position += this.horizontal_speed ; 
        
-        
-
         if(this.current_height < 0)
             this.current_height = 0;
     }
@@ -154,6 +174,17 @@ class Rocket{
 
     AdjustRotation(){
        
+        // Converter o ângulo de graus para radianos
+        this.rotation_radians = this.current_rotation_angle * Math.PI / 180;
+    }
+
+    ApplyResistence(){
+        if(this.current_height > 5){
+            this.vertical_speed -= Gravity * 0.2;
+            if(this.horizontal_speed.toFixed()){
+                this.horizontal_speed -= AirFriction * Math.sin(this.rotation_radians)
+            }
+        }
     }
 
     AdjustSpeed(){
@@ -161,14 +192,8 @@ class Rocket{
         //The current speed uses a logic based on %, it takes the max speed and the acceleration as reference
         this.current_speed = this.max_speed * (this.current_acceleration_step / this.max_acceleration);
 
-        this.AdjustRotation();
-
-          // Converter o ângulo de graus para radianos
-        this.rotation_radians = this.current_rotation_angle * Math.PI / 180;
-        if(this.current_height > 5)
-            this.vertical_speed -= Gravity * 0.2;
-
-            this.AdjustRotation();
+        this.AdjustRotation();    
+        this.ApplyResistence();
     }
 
     Brake(){
@@ -180,7 +205,7 @@ class Rocket{
     }
 
     Accelerate(){
-    
+        document.getElementById("rocket").style.transition= "0s";
         //increse the acceleration step
         //added checks, so we don't extrapolate max speed     
         if(this.current_acceleration_step < this.max_acceleration - this.acceleration * this.aerodinamics){
@@ -206,14 +231,12 @@ class Rocket{
         if(this.current_acceleration_step - this.acceleration / this.aerodinamics > 0)
             this.current_acceleration_step -= this.acceleration / this.aerodinamics;
         else
-        this.current_acceleration_step = 0;
-      
+            this.current_acceleration_step = 0;
 
-        // Calculate the new rotation angle based on the current vertical and horizontal speeds
-      
-
-
+       
         this.AdjustSpeed();
+        document.getElementById("rocket").style.transition= "0.1s";
+        this.current_rotation_angle  = calcularAngulo(this.horizontal_speed, this.vertical_speed);
     }
     
 
