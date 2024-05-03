@@ -7,7 +7,7 @@ let RocketIMG = document.getElementById("rocket_img");
 let RocketHeight = RocketObj.offsetHeight;
 
 
-var SpaceShip = new Rocket(1000, 1, 100, 1, 3)
+var SpaceShip = new Rocket(1000, 1, 0.5 , 100, 1, 3)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
@@ -58,19 +58,20 @@ class Controller{
 
     
 
-    AdjustState(){
+    RequestAdjustState(){
         switch(SpaceShip.GetCurrentState()){
             case CURRENT_STATE.OFF:          
                 RocketIMG.src = "assets/sprites/RocketStartup/Sprites/sprite_0.png";  
             break;
-
+            
             case CURRENT_STATE.IGNITION:
           
                 switch(RocketManager.playIgnitionAnimation()){
                     case 28:
                         return true;
                     case 24:
-                        SpaceShip.SetVerticalSpeed(10);
+                        SpaceShip.SetVerticalSpeed(15)
+                        SpaceShip.current_acceleration_step = SpaceShip.max_acceleration;
                         break;
                 }
                 return false;
@@ -109,7 +110,8 @@ class Controller{
     
         switch(SpaceShip.GetCurrentState()){
             case CURRENT_STATE.WORKING:
-                this.AdjustState()
+                RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration);
+                this.RequestAdjustState()
                 if(this.TurnDirection !=2){
                     SpaceShip.Turn(this.TurnDirection);
                 }
@@ -126,17 +128,16 @@ class Controller{
             break;
             
             case CURRENT_STATE.OFF:
-                this.AdjustState()
+                this.RequestAdjustState()
                 if(this.Accelerate){
                     SpaceShip.NextStage();
                 }
             break;
 
             case CURRENT_STATE.IGNITION:
-                if(this.AdjustState())
+                if(this.RequestAdjustState())
                     SpaceShip.NextStage();
             break;
-
         }
 
       
@@ -172,53 +173,16 @@ function calcularVelocidadeRealXY(velocidadeX, velocidadeY) {
 
 function Update(){
 
-    document.addEventListener('keydown', function(e) {
-        
-        switch(e.key.toLowerCase()){
-            case 'w':
-                Control.Accelerate = true;
-                break;
-            case 's':
-                Control.Brake = true;
-                break;
-            case 'a':
-                Control.TurnDirection = 0;
-            break;
-            case 'd':
-                Control.TurnDirection = 1;
-                break;
-        }
-    });
-    
-    document.addEventListener('keyup', function(e) {
-      
-        switch(e.key.toLowerCase()){
-            case 'w':
-                Control.Accelerate = false;
-            break;   
-            case 's':
-                Control.Brake = false;
-            break;
-            case 'a':
-            case 'd':
-                Control.TurnDirection = 2;
-                break;
-        }
-    });
-
-
-
+ 
     let FixedHeight = SpaceShip.GetHeight() / 40;
     let FixedHorizontal = -SpaceShip.GetHorizontalPosition() / 40;
-
     document.body.style.backgroundPositionY = FixedHeight +'px';
     document.body.style.backgroundPositionX = FixedHorizontal +'px';
 
     let CurrentAcceleration = SpaceShip.GetCurrentAccelerationPercentage() * 100;
     let CurrentSpeed = calcularVelocidadeRealXY(SpaceShip.GetHorizontalSpeed(), SpaceShip.GetVerticalSpeed()) /  SpaceShip.GetMaxSpeed() * 100;
 
-     Control.ControlVelocimeter("speed_neddle", CurrentSpeed);
-
+    Control.ControlVelocimeter("speed_neddle", CurrentSpeed);
 
     document.getElementById("acceleration").style.height = CurrentAcceleration + "%";
     document.getElementById("speed").style.height = CurrentSpeed + "%";
@@ -226,5 +190,40 @@ function Update(){
     Control.UpdateMovement();
   
 }
+
+document.addEventListener('keydown', function(e) {
+        
+    switch(e.key.toLowerCase()){
+        case 'w':
+            Control.Accelerate = true;
+            break;
+        case 's':
+            Control.Brake = true;
+            break;
+        case 'a':
+            Control.TurnDirection = 0;
+        break;
+        case 'd':
+            Control.TurnDirection = 1;
+            break;
+    }
+});
+
+document.addEventListener('keyup', function(e) {
+  
+    switch(e.key.toLowerCase()){
+        case 'w':
+            Control.Accelerate = false;
+        break;   
+        case 's':
+            Control.Brake = false;
+        break;
+        case 'a':
+        case 'd':
+            Control.TurnDirection = 2;
+            break;
+    }
+});
+
 
 setInterval(Update, 10);

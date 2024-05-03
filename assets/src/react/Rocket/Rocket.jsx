@@ -1,5 +1,5 @@
 
-const Gravity = 0.2;
+const Gravity = 0.5;
 const AirFriction = 0.1;
 
 const CURRENT_STATE = {
@@ -30,10 +30,17 @@ function calcularAngulo(velocidadeHorizontal, velocidadeVertical) {
 }
 
 
+function calcularVelocidadeRealXY(velocidadeX, velocidadeY) {
+    // Calcular a velocidade real usando o teorema de Pitágoras
+    var velocidadeReal = Math.sqrt(Math.pow(velocidadeX, 2) + Math.pow(velocidadeY, 2));
+    
+    return velocidadeReal;
+}
+
 
 class Rocket{
 
-    constructor(max_acceleration, acceleration, max_speed, aerodinamics, brakeforce  ){
+    constructor(max_acceleration, acceleration, acceleration_power, max_speed, aerodinamics, brakeforce  ){
         //How faster the rocket will accelerate
         this.acceleration = acceleration;
 
@@ -56,6 +63,8 @@ class Rocket{
         this.current_height = 0;
         this.current_horizontal_position = 0;
         this.current_rocket_state = CURRENT_STATE.OFF;
+        this.acceleration_power = acceleration_power;
+
 
         //This is used to regulate the direction of the movement
         this.current_rotation_angle = 0;
@@ -164,16 +173,20 @@ class Rocket{
                 break;
         }
 
-          // Garantir que a rotação esteja entre -180 e 180 graus
-        if (this.current_rotation_angle > 180) {
-            this.current_rotation_angle -= 360;
-        } else if (this.current_rotation_angle < -180) {
-            this.current_rotation_angle += 360;
-        }
+        this.AdjustRotation();
+
+        
     }
 
     AdjustRotation(){
        
+          // Garantir que a rotação esteja entre -180 e 180 graus
+          if (this.current_rotation_angle > 180) {
+            this.current_rotation_angle -= 360;
+        } else if (this.current_rotation_angle < -180) {
+            this.current_rotation_angle += 360;
+        }
+
         // Converter o ângulo de graus para radianos
         this.rotation_radians = this.current_rotation_angle * Math.PI / 180;
     }
@@ -181,7 +194,7 @@ class Rocket{
     ApplyResistence(){
         if(this.current_height > 5){
             this.vertical_speed -= Gravity * 0.2;
-            if(this.horizontal_speed.toFixed()){
+            if(this.horizontal_speed.toFixed() >= 1){
                 this.horizontal_speed -= AirFriction * Math.sin(this.rotation_radians)
             }
         }
@@ -221,8 +234,11 @@ class Rocket{
         const deltaHorizontalSpeed = this.current_speed * Math.sin(this.rotation_radians);
 
         // Update the vertical and horizontal speeds based on the change
-        this.vertical_speed += (deltaVerticalSpeed - this.vertical_speed) * this.current_acceleration_step / this.max_acceleration;
-        this.horizontal_speed += (deltaHorizontalSpeed - this.horizontal_speed) * this.current_acceleration_step / this.max_acceleration;
+    
+
+        
+        this.vertical_speed= Math.min( this.vertical_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.cos(this.rotation_radians), this.max_speed)
+        this.horizontal_speed = Math.min( this.horizontal_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.sin(this.rotation_radians), this.max_speed)
     }
 
     Deaccelerate(){    
@@ -235,8 +251,20 @@ class Rocket{
 
        
         this.AdjustSpeed();
-        document.getElementById("rocket").style.transition= "0.1s";
-        this.current_rotation_angle  = calcularAngulo(this.horizontal_speed, this.vertical_speed);
+        
+        // Gradually adjust the rotation angle
+        const targetRotationAngle = calcularAngulo(this.horizontal_speed, this.vertical_speed);
+        const rotationStep = 0.1; // You can adjust the step size as needed
+        if (Math.abs(this.current_rotation_angle - targetRotationAngle) > rotationStep) {
+            if (this.current_rotation_angle < targetRotationAngle) {
+                this.current_rotation_angle += rotationStep;
+            } else {
+                this.current_rotation_angle -= rotationStep;
+            }
+        } else {
+            this.current_rotation_angle = targetRotationAngle;
+        }
+        this.AdjustRotation();
     }
     
 

@@ -1,6 +1,7 @@
 
 import EngineStart from '../../../audio/engine_start.mp3'
 import EngineLaunch from '../../../audio/engine_launch.mp3'
+import EngineWorking from '../../../audio/engine_working.mp3'
 
 
 
@@ -18,7 +19,9 @@ function calculateDeltaTime(previousTime) {
     return parseFloat(deltaTimeSec.toFixed(2)); // Round the result to the specified number of decimal places
 }
 
-var SecondAudio;
+var SecondIgnitionAudio;
+var WorkingAudio = null;
+
 
 class RocketSpriteController {
     constructor(  ) {
@@ -58,8 +61,8 @@ class RocketSpriteController {
                 break;
 
                 case 12:
-                    if(!SecondAudio)
-                        SecondAudio = playSound(EngineLaunch, 0.7);
+                    if(!SecondIgnitionAudio)
+                        SecondIgnitionAudio = playSound(EngineLaunch, 0.7);
                 break;
         }
    
@@ -68,6 +71,16 @@ class RocketSpriteController {
             this.intervalFunction = null;                 
         }          
         return this.currentSpriteIdx;
+    }
+
+    playWorkingAnimation(AccelerationPercentage){
+        
+        if(WorkingAudio == null || WorkingAudio.ended){
+            WorkingAudio = playSound(EngineWorking, 1)
+        }
+
+        WorkingAudio.volume = AccelerationPercentage * 0.7;
+
     }
 
     
