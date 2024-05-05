@@ -7,7 +7,7 @@ let RocketIMG = document.getElementById("rocket_img");
 let RocketHeight = RocketObj.offsetHeight;
 
 
-var SpaceShip = new Rocket(1000, 1, 0.5 , 100, 1, 3)
+var SpaceShip = new Rocket(100, 1, 2 , 1000, 3, 10)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
@@ -65,15 +65,19 @@ class Controller{
             break;
             
             case CURRENT_STATE.IGNITION:
-          
-                switch(RocketManager.playIgnitionAnimation()){
+
+             
+                let AnimationStep = RocketManager.playIgnitionAnimation();
+                switch(AnimationStep){
                     case 28:
                         return true;
                     case 24:
-                        SpaceShip.SetVerticalSpeed(15)
-                        SpaceShip.current_acceleration_step = SpaceShip.max_acceleration;
+                        SpaceShip.SetVerticalSpeed(SpaceShip.max_speed * 0.3)
                         break;
                 }
+
+                SpaceShip.AdjustAcceleration(AnimationStep / 28);
+
                 return false;
        } 
         
@@ -109,11 +113,13 @@ class Controller{
        
     
         switch(SpaceShip.GetCurrentState()){
+
             case CURRENT_STATE.WORKING:
                 RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration);
                 this.RequestAdjustState()
                 if(this.TurnDirection !=2){
                     SpaceShip.Turn(this.TurnDirection);
+                    RocketManager.playTurnAnimation();
                 }
             
                 if(this.Accelerate){

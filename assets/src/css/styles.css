@@ -1,11 +1,6 @@
 @import url(controllers.css);
 @import url(rocket.css);
 
-body{
-    background-image: url("../../img/space_background.jpg");
-    background-position: bottom;
-}
-
 #root {
     display: flex;
     align-items: flex-end;
@@ -31,5 +26,9 @@ body {
     justify-content: center;
     align-items: center;
     background-color: gray;
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    background-image: url("../../img/space_background.jpg");
+    background-position: bottom;
 }
   

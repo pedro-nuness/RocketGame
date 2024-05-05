@@ -1,5 +1,5 @@
 
-const Gravity = 0.5;
+const Gravity = 5;
 const AirFriction = 0.1;
 
 const CURRENT_STATE = {
@@ -152,7 +152,12 @@ class Rocket{
         
         //km/h
         if(this.current_height + this.vertical_speed >= 0){
-            this.current_height += this.vertical_speed ;
+            this.current_height += this.vertical_speed;
+        }else{
+            //Crashed, then we initiate explosion animation
+            this.current_height = 0;
+            this.vertical_speed = 0;
+            this.current_acceleration_step = 0;
         }
       
         this.current_horizontal_position += this.horizontal_speed ; 
@@ -176,6 +181,10 @@ class Rocket{
         this.AdjustRotation();
 
         
+    }
+
+    AdjustAcceleration(AccelerationPercentage){
+        this.current_acceleration_step = this.max_acceleration * AccelerationPercentage;
     }
 
     AdjustRotation(){
