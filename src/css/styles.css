@@ -1,0 +1,34 @@
+@import url(controllers.css);
+@import url(rocket.css);
+
+#root {
+    display: flex;
+    align-items: flex-end;
+    height: 95%;
+    width: 98%;
+  
+    
+}   
+  
+html{
+    display: flex;
+    place-items: center;
+    margin: 0;
+}
+
+
+
+body {
+    height: 99vh;
+    width: 99vw;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gray;
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    background-image: url("../../img/space_background.jpg");
+    background-position: bottom;
+}
+  
