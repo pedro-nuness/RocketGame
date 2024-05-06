@@ -43,7 +43,7 @@ function getRandomNumber(min, max) {
 }
 
 
-class Controller{
+export default class Controller{
 
     constructor(currentPosX, currentPosY){
         this.X = currentPosX;
@@ -61,7 +61,7 @@ class Controller{
     RequestAdjustState(){
         switch(SpaceShip.GetCurrentState()){
             case CURRENT_STATE.OFF:          
-                RocketIMG.src = "assets/sprites/RocketStartup/Sprites/sprite_0.png";  
+                RocketIMG.src = "./sprites/RocketStartup/Sprites/sprite_0.png";  
             break;
             
             case CURRENT_STATE.IGNITION:

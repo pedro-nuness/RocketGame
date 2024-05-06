@@ -1,5 +1,5 @@
 import Animation from "./Animation"
-import EngineWorking from '../../../../audio/Engine/engine_working_fit.mp3'
+import EngineWorking from '/audio/Engine/engine_working_fit.mp3'
 
 function playSound(Obj, volume) {
     //  let audio = new Audio('file/pong.mp3');
@@ -9,7 +9,7 @@ function playSound(Obj, volume) {
     return CurrentPlayingAudio;
 }
 
-class RocketWorkingAnimation extends Animation{
+export default class RocketWorkingAnimation extends Animation{
 
     constructor(){
         super();
@@ -46,7 +46,6 @@ class RocketWorkingAnimation extends Animation{
                 if(this.currentSpriteIdx > 4)
                     this.currentSpriteIdx = 0;        
                 this.InitializedSlowDown = true;
-                console.log(5);
             } 
             
             this.LastAcceleration = AccelerationPercentage;
@@ -59,8 +58,7 @@ class RocketWorkingAnimation extends Animation{
             if(this.currentSpriteIdx == 4)
                 this.InitializedSlowDown = false;
 
-            super.Animate(`assets/sprites/RocketTurning/RocketTurningOff/sprites`, 100, 4);
-            console.log(4);
+            super.Animate('/sprites/RocketTurning/RocketTurningOff/sprites', 100, 4);
             return;
         }
 
@@ -74,14 +72,12 @@ class RocketWorkingAnimation extends Animation{
              
             }
             
-            super.Animate(`assets/sprites/RocketTurning/RocketTurningOn/sprites`, 50, 4);
+            super.Animate('/sprites/RocketTurning/RocketTurningOn/sprites', 50, 4);
             return;
         }
 
         
         if(AccelerationPercentage){
-
-            console.log(2);
 
             if(this.WorkingAudio == null){
                 this.WorkingAudio = playSound(EngineWorking, 1)
@@ -99,15 +95,12 @@ class RocketWorkingAnimation extends Animation{
             if(this.currentSpriteIdx >= 3)
                 this.currentSpriteIdx = 0;
 
-            this.rocketImg.src = `assets/sprites/RocketWorking/Sprites/sprite_${this.currentSpriteIdx}.png`;
-
             let AnimationSpeed = 10 / AccelerationPercentage;
 
-            super.Animate(`assets/sprites/RocketWorking/Sprites`, AnimationSpeed, 2, 50);
+            super.Animate(`/sprites/RocketWorking/Sprites`, AnimationSpeed, 2, 50);
         }
 
     }
 
 }
 
-export default RocketWorkingAnimation

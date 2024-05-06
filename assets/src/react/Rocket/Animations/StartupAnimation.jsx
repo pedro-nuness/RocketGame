@@ -1,6 +1,6 @@
 import Animation from "./Animation"
-import EngineStart from "../../../../audio/Engine/engine_start.mp3"
-import EngineStartCombustion from "../../../../audio/Engine/engine_launch_fit.mp3"
+import EngineStart from "/audio/Engine/engine_start.mp3"
+import EngineStartCombustion from "/audio/Engine/engine_launch_fit.mp3"
 
 
 function calculateDeltaTime(previousTime) {
@@ -18,7 +18,7 @@ function playSound(Obj, volume) {
 }
 
 
-class RocketStartupAnimation extends Animation {
+export default class RocketStartupAnimation extends Animation {
     constructor() {
         super();
         this.audio = null;
@@ -28,6 +28,7 @@ class RocketStartupAnimation extends Animation {
     }
 
     play() {
+
         if (!this.audio) {
             this.audio = playSound(EngineStart, 1);
             this.startTime = new Date().getTime();
@@ -36,7 +37,7 @@ class RocketStartupAnimation extends Animation {
         
         let deltaTime = calculateDeltaTime(this.startTime);
         if(deltaTime >= 13)
-            super.Animate(`assets/sprites/RocketStartup/Sprites`, 100, 28);
+            super.Animate('/sprites/RocketStartup/Sprites/', 100, 28);
 
         switch (deltaTime) {
             case 12:
@@ -56,5 +57,3 @@ class RocketStartupAnimation extends Animation {
         return this.currentSpriteIdx;
     }
 }
-
-export default RocketStartupAnimation

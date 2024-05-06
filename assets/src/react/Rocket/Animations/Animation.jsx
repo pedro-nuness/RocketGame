@@ -1,4 +1,4 @@
-class Animation {
+export default class Animation {
 
     constructor(){  
         this.currentSpriteIdx = 0;
@@ -19,8 +19,7 @@ class Animation {
             this.lastUpdateTime = currentTime;
         }
 
-        this.rocketImg.src = `${SpriteDir}/sprite_${this.currentSpriteIdx}.png`;
+        //this.rocketImg.src = SpriteDir;
+        this.rocketImg.src = `.${SpriteDir}/sprite_${this.currentSpriteIdx}.png`;
     }
 }
-
-export default Animation

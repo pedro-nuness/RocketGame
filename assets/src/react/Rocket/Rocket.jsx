@@ -38,7 +38,7 @@ function calcularVelocidadeRealXY(velocidadeX, velocidadeY) {
 }
 
 
-class Rocket{
+export default class Rocket{
 
     constructor(max_acceleration, acceleration, acceleration_power, max_speed, aerodinamics, brakeforce  ){
         //How faster the rocket will accelerate
@@ -98,55 +98,10 @@ class Rocket{
             case CURRENT_STATE.IGNITION:
                 this.current_rocket_state = CURRENT_STATE.WORKING;
             break;
-            case CURRENT_STATE.IGNITION:
-                this.current_rocket_state = CURRENT_STATE.WORKING;
-            break;
         }
     }
 
-    SetVerticalSpeed(speed){
-        this.vertical_speed = speed;
-    }
-
-    SetHorizontalSpeed(speed){
-        this.vertical_speed = speed;
-    }
-
-    GetCurrentSpeed() {
-        return this.current_speed;
-    }
-
-    GetRotation(){
-        return this.current_rotation_angle;
-    }
-
-    GetVerticalSpeed(){
-        return this.vertical_speed;
-    }
-
-    GetCurrentAccelerationPercentage(){
-        return this.current_acceleration_step / this.max_acceleration;
-    }
-
-    GetMaxSpeed(){
-        return  this.max_speed;
-    }
-
-    GetHorizontalSpeed(){
-        return this.horizontal_speed;
-    }
-
-    GetHeight(){
-        return this.current_height;
-    }
-
-    GetHorizontalPosition(){
-        return this.current_horizontal_position;
-    }
-
-    GetCurrentState(){
-        return this.current_rocket_state;
-    }
+ 
 
     AdjustHeight(){    
         
@@ -244,8 +199,6 @@ class Rocket{
 
         // Update the vertical and horizontal speeds based on the change
     
-
-        
         this.vertical_speed= Math.min( this.vertical_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.cos(this.rotation_radians), this.max_speed)
         this.horizontal_speed = Math.min( this.horizontal_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.sin(this.rotation_radians), this.max_speed)
     }
@@ -263,6 +216,7 @@ class Rocket{
         
         // Gradually adjust the rotation angle
         const targetRotationAngle = calcularAngulo(this.horizontal_speed, this.vertical_speed);
+
         const rotationStep = 0.1; // You can adjust the step size as needed
         if (Math.abs(this.current_rotation_angle - targetRotationAngle) > rotationStep) {
             if (this.current_rotation_angle < targetRotationAngle) {
@@ -277,8 +231,52 @@ class Rocket{
     }
     
 
+    SetVerticalSpeed(speed){
+        this.vertical_speed = speed;
+    }
+
+    SetHorizontalSpeed(speed){
+        this.vertical_speed = speed;
+    }
+
+    GetCurrentSpeed() {
+        return this.current_speed;
+    }
+
+    GetRotation(){
+        return this.current_rotation_angle;
+    }
+
+    GetVerticalSpeed(){
+        return this.vertical_speed;
+    }
+
+    GetCurrentAccelerationPercentage(){
+        return this.current_acceleration_step / this.max_acceleration;
+    }
+
+    GetMaxSpeed(){
+        return  this.max_speed;
+    }
+
+    GetHorizontalSpeed(){
+        return this.horizontal_speed;
+    }
+
+    GetHeight(){
+        return this.current_height;
+    }
+
+    GetHorizontalPosition(){
+        return this.current_horizontal_position;
+    }
+
+    GetCurrentState(){
+        return this.current_rocket_state;
+    }
+
+
 }
 
 
 
-export default Rocket
