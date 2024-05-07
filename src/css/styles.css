@@ -1,13 +1,11 @@
-@import url(controllers.css);
+@import url(controllers/controllers.css);
 @import url(rocket.css);
 
 #root {
     display: flex;
     align-items: flex-end;
     height: 95%;
-    width: 98%;
-  
-    
+    width: 75%; 
 }   
   
 html{

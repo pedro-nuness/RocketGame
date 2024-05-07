@@ -1,11 +1,29 @@
+@import url(nav_map.css);
+@import url(status.css);
+
 #controllers{
     display: flex;
     align-items: center;
     justify-content: space-around;
-    border-radius: 15px;
-    background-color: rgb(100, 100, 100);
-    width: 30%;
+
+    width: 95%;
     height: 30%;
+    
+}
+
+
+
+#controllers_section{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    height: 95%;
+    width: 20%;
+    border-radius: 15px;
+    background: rgb(44,44,44);
+    background: linear-gradient(6deg, rgba(44,44,44,1) 30%, rgba(122,122,122,1) 100%);
+    box-shadow: 0px 0px 20px rgb(111, 111, 111);
 }
 
 .state{

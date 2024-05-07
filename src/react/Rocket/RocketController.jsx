@@ -11,15 +11,18 @@ var SpaceShip = new Rocket(100, 1, 2 , 1000, 3, 10)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
-const w = document.getElementById("root").offsetWidth;
-const h = document.getElementById("root").offsetHeight ;
+let Root = document.getElementById("root");
+console.log(Root.offsetWidth)
+console.log(Root.offsetLeft)
+const w = Root.offsetWidth + Root.offsetLeft;
+const h = Root.offsetHeight + Root.offsetTop;
 
-function CheckBorder(movementSize, elementSize, coord, limit) {
+function CheckBorder(movementSize, elementSize, coord, flimit, nlimit = 0) {
     if (movementSize > 0) {
-        if (coord + movementSize < limit - elementSize) 
+        if (coord + movementSize < flimit - elementSize) 
         return true;
     } else {
-        if (coord + movementSize >= 0) 
+        if (coord + movementSize >= nlimit) 
         return true;
     }
 
@@ -87,14 +90,14 @@ export default class Controller{
     AdjustPosition(){
        
         if(RocketObj != null){
-            let VSpeed = -SpaceShip.GetVerticalSpeed() / 10;
-            let HSpeed = SpaceShip.GetHorizontalSpeed() / 10;
+            let VSpeed = -SpaceShip.GetVerticalSpeed() / 20;
+            let HSpeed = SpaceShip.GetHorizontalSpeed() / 20;
 
-            if (CheckBorder(VSpeed, RocketObj.offsetHeight, this.Y, h)) {
+            if (CheckBorder(VSpeed, RocketObj.offsetHeight, this.Y, h, Root.offsetTop)) {
                 this.Y += VSpeed ;
             }
 
-            if (CheckBorder(HSpeed, RocketObj.offsetWidth, this.X, w)) {
+            if (CheckBorder(HSpeed, RocketObj.offsetWidth, this.X, w, Root.offsetLeft)) {
                 this.X += HSpeed;
             }
 
@@ -141,7 +144,7 @@ export default class Controller{
             break;
 
             case CURRENT_STATE.IGNITION:
-                if(this.RequestAdjustState())
+                //if(this.RequestAdjustState())
                     SpaceShip.NextStage();
             break;
         }
