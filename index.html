@@ -1,40 +1,109 @@
 <!doctype html>
-<html lang="pt-brwww">
+<html lang="pt-br">
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/src/css/styles.css">
+
+    
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Reddit+Sans+Condensed:wght@200..900&display=swap" rel="stylesheet">
+
     <title>RocketGame</title>
   </head>
   <body>
-    <div id="root">
-      <div id="controllers">
-        <div class="velocimeter">
-          <div class="velocimeter_bars">
-            <div class="velocimeter_neddle" id="speed_neddle"></div>
+    <div id="controllers_section">
+      <div id="rocket_status">
+        <div id="rocket_status_area">
+          
+          <div class="rocket_status_box">
+
+            <div class="rocket_status_img">
+              <img class="rocket_status_img_warning" src="assets/img/waning.webp">
             </div>
-        </div>
-  
-        <div class="state">
-          <div class="state_bar">
-            <div class="state_bar_progress" id="speed"></div>
+
+            <span class ="rocket_status_text" id="rocket_status_text_warning">
+              Waning: Losing speed!!
+            </span>
+
           </div>
-          <span class="state_info">Speed</span>
-        </div>
-  
-        <div class="state">
-          <div class="state_bar">
-            <div class="state_bar_progress" id="acceleration"></div>
+
+          <div class="rocket_status_box">
+
+            <div class="rocket_status_img">
+              <img class="rocket_status_img_warning" src="assets/img/waning.webp">
+            </div>
+
+            <span class ="rocket_status_text" id="rocket_status_text_warning">
+              Waning: Losing speed!!
+            </span>
+
           </div>
-          <span class="state_info">Acceleration</span>
+
+          <div class="rocket_status_box">
+
+            <div class="rocket_status_img">
+              <img class="rocket_status_img_error" src="assets/img/error.png">
+            </div>
+
+            <span class ="rocket_status_text" id="rocket_status_text_error">
+              Critical: Losing speed!!
+            </span>
+
+          </div>
+
+        </div>
+
+        
+      </div>
+
+
+      <div id="nav_map">
+        <div id="altitude_map">
+          
+        </div>
+        <div id="position_map">
+          <div id="current_position">
+
+          </div>
         </div>
       </div>
-  
+
+        <div id="controllers">
+          <div class="velocimeter">
+            <div class="velocimeter_bars">
+              <div class="velocimeter_neddle" id="speed_neddle"></div>
+              </div>
+          </div>
+
+          <div class="state">
+            <div class="state_bar">
+              <div class="state_bar_progress" id="speed"></div>
+            </div>
+            <span class="state_info">Speed</span>
+          </div>
+
+          <div class="state">
+            <div class="state_bar">
+              <div class="state_bar_progress" id="acceleration"></div>
+            </div>
+            <span class="state_info">Acceleration</span>
+          </div>
+          
+        </div>
+    </div>
+    <div id="root">
+      
       <div id="rocket">
         <span id="info" style="color: white;"></span>
-        <img id="rocket_img" src="assets/sprites/RocketStartup/Sprites/sprite_0.png">
+        <img id="rocket_img" src="/sprites/RocketStartup/Sprites/sprite_0.png">
       </div>
+
     </div>
+
+
     <script type="module" src="./assets/src/react/Rocket/RocketController.jsx"></script>
   </body>
   </html>

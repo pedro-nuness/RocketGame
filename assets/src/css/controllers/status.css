@@ -1,0 +1,78 @@
+#rocket_status{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2C2C2C;
+    width: 90%;
+    height: 30%;
+    padding: 2%;
+    border-radius: 10px;
+}
+
+
+
+#rocket_status_area{ 
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    border: 1px solid rgb(82, 82, 82);
+    background-color: black;
+    width: 90%;
+    height: 90%;
+    border-radius: 5px;
+    padding: 2%;
+}
+
+
+
+.rocket_status_box{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.rocket_status_text{
+    white-space: nowrap;
+    font-family: "Reddit Sans Condensed", sans-serif;
+    font-style: normal;
+    font-size: 80%;
+
+}
+
+#rocket_status_text_warning{
+    color: yellow;
+    font-weight: 400;
+}
+
+#rocket_status_text_error{
+    color: red;
+    font-weight: 400;
+}
+
+.rocket_status_img{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 90%;
+    overflow: hidden;
+}
+
+.rocket_status_img_warning{
+    height: 75%;
+    width: 75%;
+    object-fit: contain;
+}
+.rocket_status_img_error{
+    height: 75%;
+    width: 75%;
+    object-fit: contain;
+}
+
+
+.rocket_status_text_info{
+    color: white;
+    font-weight: 300; 
+}
+
