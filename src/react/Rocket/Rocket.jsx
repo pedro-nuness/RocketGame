@@ -1,3 +1,6 @@
+import RocketStatus from "./RocketStatusManager"
+
+var RocketManager = new RocketStatus("rocket_status_area");
 
 const Gravity = 5;
 const AirFriction = 0.1;
@@ -105,6 +108,8 @@ export default class Rocket{
 
     AdjustHeight(){    
         
+
+
         //km/h
         if(this.current_height + this.vertical_speed >= 0){
             this.current_height += this.vertical_speed;
@@ -119,6 +124,14 @@ export default class Rocket{
        
         if(this.current_height < 0)
             this.current_height = 0;
+        else{
+            if(this.vertical_speed < this.max_speed * 0.9){
+             if(this.vertical_speed < this.max_speed * 0.3)
+                RocketManager.GenerateCriticalStatus("Low speed")
+                else if(this.vertical_speed < this.max_speed * 0.65)
+                RocketManager.GenerateWarningStatus("Low speed")
+            }
+        }
     }
 
 

@@ -68,8 +68,6 @@ export default class RocketWorkingAnimation extends Animation{
                 this.WorkingAudio.play();   
             if(this.currentSpriteIdx == 4){
                 this.InitializedAcceleration = false;
-                SecondIgnitionAudio = null;
-             
             }
             
             super.Animate('/sprites/RocketTurning/RocketTurningOn/sprites', 50, 4);
