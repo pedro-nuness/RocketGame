@@ -74,6 +74,7 @@ export default class Rocket{
         this.turn_power = 1;
         this.current_acceleration_step = 0;
         this.rotation_radians = 0;
+        this.OnAcceleration = false;
     }
 
     TurnBoost(){
@@ -187,6 +188,7 @@ export default class Rocket{
     }
 
     Brake(){
+        this.OnAcceleration = false;
         if(this.current_acceleration_step > this.brakeforce)
             this.current_acceleration_step -= this.brakeforce;
         else
@@ -195,6 +197,7 @@ export default class Rocket{
     }
 
     Accelerate(){
+        this.OnAcceleration = true;
         document.getElementById("rocket").style.transition= "0s";
         //increse the acceleration step
         //added checks, so we don't extrapolate max speed     
@@ -217,6 +220,7 @@ export default class Rocket{
     }
 
     Deaccelerate(){    
+        this.OnAcceleration = false;
         //decrease the acceleration step
           //added checks, so we don't get acceleration under 0
         if(this.current_acceleration_step - this.acceleration / this.aerodinamics > 0)

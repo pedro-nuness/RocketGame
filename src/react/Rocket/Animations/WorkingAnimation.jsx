@@ -19,20 +19,20 @@ export default class RocketWorkingAnimation extends Animation{
         this.WorkingAudio = null;
         this.InitializedSlowDown = false;
         this.InitializedAcceleration = false;
+        this.WasAccelerating = false;
     }
 
-    play(AccelerationPercentage){
+    play(AccelerationPercentage, Accelerating){
     
         if(this.WorkingAudio)
             this.WorkingAudio.volume = Math.max(AccelerationPercentage, 0.1) ;
         else
             this.WorkingAudio = playSound(EngineWorking, 1)
 
-        if(this.LastAcceleration != AccelerationPercentage){
+        if(this.WasAccelerating != Accelerating){
 
-            if(AccelerationPercentage && !this.LastAcceleration){
-                //Initiate accelerate animation
-              
+            if(Accelerating){
+                //Initialize Accelerating animation
                 if(this.InitializedSlowDown){    
                     this.InitializedSlowDown = false;
                 }else
@@ -41,14 +41,26 @@ export default class RocketWorkingAnimation extends Animation{
                 this.InitializedAcceleration = true;
             }
 
-            if(!AccelerationPercentage && this.LastAcceleration){
+            if(!Accelerating){
                 //Initiate slow down animation;   
                 if(this.currentSpriteIdx > 4)
-                    this.currentSpriteIdx = 0;        
+                    this.currentSpriteIdx = 0;    
+
                 this.InitializedSlowDown = true;
             } 
             
-            this.LastAcceleration = AccelerationPercentage;
+            this.WasAccelerating = Accelerating;
+        }
+
+        if(this.InitializedAcceleration){
+           
+            this.WorkingAudio.play();   
+
+            if(this.currentSpriteIdx == 4)
+                this.InitializedAcceleration = false;
+
+            super.Animate('/sprites/RocketTurning/RocketTurningOn/sprites', 50, 4);
+            return;
         }
 
         if(this.InitializedSlowDown){
@@ -62,20 +74,9 @@ export default class RocketWorkingAnimation extends Animation{
             return;
         }
 
-        if(this.InitializedAcceleration){
-
-            if(this.WorkingAudio)
-                this.WorkingAudio.play();   
-            if(this.currentSpriteIdx == 4){
-                this.InitializedAcceleration = false;
-            }
-            
-            super.Animate('/sprites/RocketTurning/RocketTurningOn/sprites', 50, 4);
-            return;
-        }
 
         
-        if(AccelerationPercentage){
+        if(Accelerating){
 
             if(this.WorkingAudio == null){
                 this.WorkingAudio = playSound(EngineWorking, 1)

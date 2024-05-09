@@ -11,6 +11,7 @@ var SpaceShip = new Rocket(100, 1, 2 , 1000, 3, 10)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
+let Smoke = document.getElementById("rocket_smoke");
 let Root = document.getElementById("root");
 console.log(Root.offsetWidth)
 console.log(Root.offsetLeft)
@@ -75,7 +76,7 @@ export default class Controller{
                     case 28:
                         return true;
                     case 24:
-                        SpaceShip.SetVerticalSpeed(SpaceShip.max_speed * 0.3)
+                        SpaceShip.SetVerticalSpeed(SpaceShip.max_speed * 0.05)
                         break;
                 }
 
@@ -105,6 +106,10 @@ export default class Controller{
                 RocketObj.style.rotate = SpaceShip.GetRotation() + "deg";
             }
                 
+            Smoke.style.left = this.X + 'px';
+            Smoke.style.top = this.Y + 'px';
+            Smoke.style.rotate = SpaceShip.GetRotation() + "deg";
+
             RocketObj.style.left = this.X + 'px';
             RocketObj.style.top = this.Y + 'px';
          
@@ -118,7 +123,7 @@ export default class Controller{
         switch(SpaceShip.GetCurrentState()){
 
             case CURRENT_STATE.WORKING:
-                RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration);
+                RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration, SpaceShip.OnAcceleration);
                 this.RequestAdjustState()
                 if(this.TurnDirection !=2){
                     SpaceShip.Turn(this.TurnDirection);
@@ -149,7 +154,6 @@ export default class Controller{
             break;
         }
 
-      
         this.AdjustPosition();
         SpaceShip.AdjustHeight();  
     }

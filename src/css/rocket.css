@@ -17,3 +17,11 @@
 
     object-fit: cover;
 }
+
+#rocket_smoke{
+    position: absolute;
+    height: 130px;
+    width: 80px;
+    border: 1px solid white;
+    transform-origin: 0% 50%; /* Set the rotation origin to the bottom center */
+}

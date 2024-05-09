@@ -18,8 +18,8 @@ class RocketSpriteController {
       
     }
 
-    playWorkingAnimation(AccelerationPercentage){
-        this.WorkingAnimation.play(AccelerationPercentage);
+    playWorkingAnimation(AccelerationPercentage, Accelerating){
+        this.WorkingAnimation.play(AccelerationPercentage, Accelerating);
     }
 }
 
