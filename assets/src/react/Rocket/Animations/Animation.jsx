@@ -1,8 +1,8 @@
 export default class Animation {
 
-    constructor(){  
+    constructor(object = "rocket_img"){  
         this.currentSpriteIdx = 0;
-        this.rocketImg = document.getElementById("rocket_img");
+        this.rocketImg = document.getElementById(object);
         this.lastUpdateTime = 0;
     }
 

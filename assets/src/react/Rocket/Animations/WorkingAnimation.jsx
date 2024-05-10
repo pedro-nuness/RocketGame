@@ -98,7 +98,6 @@ export default class RocketWorkingAnimation extends Animation{
 
             super.Animate(`/sprites/RocketWorking/Sprites`, AnimationSpeed, 2, 50);
         }
-
     }
 
 }

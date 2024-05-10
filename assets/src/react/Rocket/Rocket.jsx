@@ -58,6 +58,8 @@ export default class Rocket{
         //And will acellerate faster
         this.aerodinamics = aerodinamics;
 
+        this.MaxHeatResistence = 1650;
+
         //CurrentStates of the rocket
         this.current_speed = 0;
         this.brakeforce = brakeforce;
@@ -75,6 +77,7 @@ export default class Rocket{
         this.current_acceleration_step = 0;
         this.rotation_radians = 0;
         this.OnAcceleration = false;
+        this.CurrentTemperature = 24;
     }
 
     TurnBoost(){
@@ -181,11 +184,15 @@ export default class Rocket{
     AdjustSpeed(){
         //Adjust the speed acording to the current acceleration step
         //The current speed uses a logic based on %, it takes the max speed and the acceleration as reference
-        this.current_speed = this.max_speed * (this.current_acceleration_step / this.max_acceleration);
+        this.current_speed = calcularVelocidadeRealXY(this.vertical_speed, this.horizontal_speed);
 
+        this.CurrentTemperature = ( this.current_speed + ( Math.pow(AirFriction, this.current_speed ) )  );
+        console.log(this.CurrentTemperature);
         this.AdjustRotation();    
         this.ApplyResistence();
     }
+
+
 
     Brake(){
         this.OnAcceleration = false;
@@ -209,9 +216,6 @@ export default class Rocket{
 
         this.AdjustSpeed();
 
-        // Calculate the change in speed based on the acceleration
-        const deltaVerticalSpeed = this.current_speed * Math.cos(this.rotation_radians);
-        const deltaHorizontalSpeed = this.current_speed * Math.sin(this.rotation_radians);
 
         // Update the vertical and horizontal speeds based on the change
     
@@ -290,6 +294,14 @@ export default class Rocket{
 
     GetCurrentState(){
         return this.current_rocket_state;
+    }
+
+    GetCurrentTemperature(){
+        return this.CurrentTemperature;
+    }
+
+    GetMaxTemperatureResistence(){
+        return this.MaxHeatResistence;
     }
 
 
