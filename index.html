@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Reddit+Sans+Condensed:wght@200..900&display=swap" rel="stylesheet">
 
     <title>RocketGame</title>
-    <script type="module" crossorigin src="/RocketGame/assets/js/index-CidBuEj9.js"></script>
-    <link rel="stylesheet" crossorigin href="/RocketGame/assets/css/index-LdFjnVbi.css">
+    <script type="module" crossorigin src="/RocketGame/assets/js/index-C_Dfq8L8.js"></script>
+    <link rel="stylesheet" crossorigin href="/RocketGame/assets/css/index-3Hlvy0SI.css">
   </head>
   <body>
     <div id="controllers_section">
@@ -88,6 +88,13 @@
 
           <div class="state">
             <div class="state_bar">
+              <div class="state_bar_progress" id="temperature"></div>
+            </div>
+            <span class="state_info">Temperature</span>
+          </div>
+
+          <div class="state">
+            <div class="state_bar">
               <div class="state_bar_progress" id="acceleration"></div>
             </div>
             <span class="state_info">Acceleration</span>
@@ -97,12 +104,20 @@
     </div>
     <div id="root">
       
-      <div id="rocket">
-        <span id="info" style="color: white;"></span>
-        <img id="rocket_img" src="/RocketGame/sprites/RocketStartup/Sprites/sprite_0.png">
-      </div>
 
-      <div id="rocket_smoke">
+        <div id="rocket_smoke">
+          <img id="rocket_smoke_img" src="" alt="">
+        </div>
+
+        <div id="rocket">
+       
+         
+         
+          <img id="rocket_img" src="/RocketGame/sprites/RocketStartup/Sprites/sprite_0.png">
+        </div>
+
+
+    
         
       </div>
 

@@ -4,14 +4,15 @@ import RocketSpriteController from './RocketStateController.jsx';
 
 let RocketObj = document.getElementById("rocket");
 let RocketIMG = document.getElementById("rocket_img");
-let RocketHeight = RocketObj.offsetHeight;
+let RocketHeight = RocketIMG.offsetHeight;
+let Smoke = document.getElementById("rocket_smoke")
 
 
 var SpaceShip = new Rocket(100, 1, 2 , 1000, 3, 10)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
-let Smoke = document.getElementById("rocket_smoke");
+
 let Root = document.getElementById("root");
 console.log(Root.offsetWidth)
 console.log(Root.offsetLeft)
@@ -94,11 +95,11 @@ export default class Controller{
             let VSpeed = -SpaceShip.GetVerticalSpeed() / 20;
             let HSpeed = SpaceShip.GetHorizontalSpeed() / 20;
 
-            if (CheckBorder(VSpeed, RocketObj.offsetHeight, this.Y, h, Root.offsetTop)) {
+            if (CheckBorder(VSpeed, RocketIMG.offsetHeight, this.Y, h, Root.offsetTop)) {
                 this.Y += VSpeed ;
             }
 
-            if (CheckBorder(HSpeed, RocketObj.offsetWidth, this.X, w, Root.offsetLeft)) {
+            if (CheckBorder(HSpeed, RocketIMG.offsetWidth, this.X, w, Root.offsetLeft)) {
                 this.X += HSpeed;
             }
 
@@ -106,12 +107,13 @@ export default class Controller{
                 RocketObj.style.rotate = SpaceShip.GetRotation() + "deg";
             }
                 
-            Smoke.style.left = this.X + 'px';
-            Smoke.style.top = this.Y + 'px';
-            Smoke.style.rotate = SpaceShip.GetRotation() + "deg";
 
             RocketObj.style.left = this.X + 'px';
             RocketObj.style.top = this.Y + 'px';
+
+            Smoke.style.left = this.X + 'px';
+            Smoke.style.top = this.Y + 'px';
+            Smoke.style.rotate = SpaceShip.GetRotation() + "deg";
          
         }else
             console.log("null element!")
@@ -124,6 +126,8 @@ export default class Controller{
 
             case CURRENT_STATE.WORKING:
                 RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration, SpaceShip.OnAcceleration);
+                if(SpaceShip.GetCurrentTemperature() >= SpaceShip.GetMaxTemperatureResistence())
+                    RocketManager.playOverHeatAnimation();
                 this.RequestAdjustState()
                 if(this.TurnDirection !=2){
                     SpaceShip.Turn(this.TurnDirection);
@@ -199,6 +203,9 @@ function Update(){
 
     document.getElementById("acceleration").style.height = CurrentAcceleration + "%";
     document.getElementById("speed").style.height = CurrentSpeed + "%";
+    document.getElementById("temperature").style.height = ( SpaceShip.GetCurrentTemperature() / 500 ) * 100 + "%";
+    
+
 
     Control.UpdateMovement();
   
