@@ -4,41 +4,20 @@ import RocketWorkingAnimation from './Animations/WorkingAnimation'
 import OverHeatAnimation from './Animations/OverHeatAnimation';
 import ExplostionAnimation from './Animations/ExplosionAnimation';
 
-import WarningAudio from '/audio/ControlSystem/Warnings/Warning.mp3'
 
-function playSound(Obj, volume) {
-    //  let audio = new Audio('file/pong.mp3');
-    var CurrentPlayingAudio= new Audio(Obj);
-    CurrentPlayingAudio.volume = volume;
-    CurrentPlayingAudio.play();
-    return CurrentPlayingAudio;
-}
 
 class RocketSpriteController {
     constructor(  ) {
         this.StartupAnimation = new RocketStartupAnimation;
         this.WorkingAnimation = new RocketWorkingAnimation;
         this.HeatAnimation = new OverHeatAnimation;
-        this.ExplostionAnimation = new ExplostionAnimation;
+        this.ExplostionAnimation = new ExplostionAnimation;   
 
-        this.HotWarningAudio = null;
-        
+        this.ResetedAnimations = false;
     }
 
     playIgnitionAnimation() {
        return this.StartupAnimation.play();
-    }
-
-    StateGettingHot(){
-        if(!this.HotWarningAudio)
-            this.HotWarningAudio = playSound(WarningAudio, 1);
-
-        this.HotWarningAudio.addEventListener('timeupdate', function(){
-            if(this.ended ){
-                this.currentTime = 0
-                this.play()
-            }
-        });
     }
 
     playTurnAnimation(){
@@ -49,8 +28,21 @@ class RocketSpriteController {
         this.HeatAnimation.play(temperature, MaxTemperature);
     }
 
-    playExplostionAnimation(){
-        return this.ExplostionAnimation.play();
+    playExplostionAnimation(){  
+        if(!this.ResetedAnimations){
+            this.HeatAnimation.rocketImg.style.opacity = 0;
+            this.ExplostionAnimation.rocketImg.style.height = '200%'
+            this.WorkingAnimation.pauseAudios();
+            this.HeatAnimation.pauseAudios();
+            this.StartupAnimation.pauseAudios();
+            this.ResetedAnimations = true;
+        }
+       
+        return this.ExplostionAnimation.play();     
+    }
+
+    playAfterExplosionAnimation(){
+        return this.HeatAnimation.playAfterExplosionAnimation();
     }
 
     playWorkingAnimation(AccelerationPercentage, Accelerating){

@@ -22,6 +22,11 @@ export default class RocketWorkingAnimation extends Animation{
         this.WasAccelerating = false;
     }
 
+    pauseAudios(){
+        if(this.WorkingAudio)
+            this.WorkingAudio.pause();
+    }
+
     play(AccelerationPercentage, Accelerating){
     
         if(this.WorkingAudio)

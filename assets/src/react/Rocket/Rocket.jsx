@@ -97,7 +97,7 @@ export default class Rocket{
             break;
         }
     }
-
+    
     NextStage(){
         switch(this.current_rocket_state){
             case CURRENT_STATE.OFF:
@@ -109,12 +109,7 @@ export default class Rocket{
         }
     }
 
- 
-
     AdjustHeight(){    
-        
-
-
         //km/h
         if(this.current_height + this.vertical_speed >= 0){
             this.current_height += this.vertical_speed;
@@ -122,7 +117,8 @@ export default class Rocket{
             this.current_height = 0;
             //Crashed, then we initiate explosion animation
             if(Math.abs(this.current_rotation_angle) > 5){
-              
+                this.vertical_speed = 0;
+                this.horizontal_speed = 0;
                 this.Exploded = true;
             }
         }
@@ -131,23 +127,23 @@ export default class Rocket{
             this.Exploded = true;
 
         if(this.Exploded ){ 
-            this.vertical_speed = 0;
-            this.horizontal_speed = 0;
+            this.CurrentTemperature = 24;    
             this.current_acceleration_step = 0;
+            if(this.vertical_speed)
+                this.vertical_speed *= 0.95;
+            if(this.horizontal_speed)
+                this.horizontal_speed *= 0.95;
+        }else if(this.current_height > 0) {
+            if(this.vertical_speed < this.max_speed * 0.9){
+                if(this.vertical_speed < this.max_speed * 0.3)
+                   RocketManager.GenerateCriticalStatus("Low speed")
+                   else if(this.vertical_speed < this.max_speed * 0.65)
+                   RocketManager.GenerateWarningStatus("Low speed")
+            }
         }
       
         this.current_horizontal_position += this.horizontal_speed ; 
-       
-        if(this.current_height < 0)
-            this.current_height = 0;
-        else{
-            if(this.vertical_speed < this.max_speed * 0.9){
-             if(this.vertical_speed < this.max_speed * 0.3)
-                RocketManager.GenerateCriticalStatus("Low speed")
-                else if(this.vertical_speed < this.max_speed * 0.65)
-                RocketManager.GenerateWarningStatus("Low speed")
-            }
-        }
+
     }
 
 

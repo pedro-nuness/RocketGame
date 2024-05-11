@@ -1,5 +1,7 @@
 #rocket{
     display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     height: 150px;
     width: 150px;

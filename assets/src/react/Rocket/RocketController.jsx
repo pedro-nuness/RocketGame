@@ -1,6 +1,6 @@
 // controller.jsx
 import Rocket from './Rocket.jsx'
-import RocketSpriteController from './RocketStateController.jsx'
+import RocketSpriteController from './RocketAnimationController.jsx'
 
 
 let RocketObj = document.getElementById("rocket");
@@ -71,9 +71,7 @@ export default class Controller{
                 RocketIMG.src = "./sprites/RocketStartup/Sprites/sprite_0.png";  
             break;
             
-            case CURRENT_STATE.IGNITION:
-
-             
+            case CURRENT_STATE.IGNITION:      
                 let AnimationStep = RocketManager.playIgnitionAnimation();
                 switch(AnimationStep){
                     case 28:
@@ -86,6 +84,21 @@ export default class Controller{
                 SpaceShip.AdjustAcceleration(AnimationStep / 28);
 
                 return false;
+            break;
+
+            case CURRENT_STATE.WORKING:
+                RocketManager.playOverHeatAnimation(SpaceShip.GetCurrentTemperature(), SpaceShip.GetMaxTemperatureResistence());       
+                if(SpaceShip.Exploded){
+                    if(RocketManager.playExplostionAnimation()){
+                        SpaceShip.current_rocket_state = CURRENT_STATE.EXPLODED;
+                    }
+                    return false;
+                }else{
+                    RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration, SpaceShip.OnAcceleration);
+                    return true;   
+                }
+
+            
        } 
         
         return false;
@@ -109,7 +122,6 @@ export default class Controller{
                 RocketObj.style.rotate = SpaceShip.GetRotation() + "deg";
             }
                 
-
             RocketObj.style.left = this.X + 'px';
             RocketObj.style.top = this.Y + 'px';
 
@@ -122,43 +134,31 @@ export default class Controller{
     }
 
     UpdateMovement(){
-       
     
         switch(SpaceShip.GetCurrentState()){
 
+            case CURRENT_STATE.EXPLODED:
+              
 
 
-            case CURRENT_STATE.WORKING:
-                RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration, SpaceShip.OnAcceleration);
+            break;
 
-                if(SpaceShip.GetCurrentTemperature() >= SpaceShip.GetMaxTemperatureResistence() * 0.8){
-                    RocketManager.StateGettingHot();
-                }
-
-       
-                RocketManager.playOverHeatAnimation(SpaceShip.GetCurrentTemperature(), SpaceShip.GetMaxTemperatureResistence());
-                
-
-                if(SpaceShip.Exploded){
-                    if(RocketManager.playExplostionAnimation()){
-                        SpaceShip.current_rocket_state = CURRENT_STATE.EXPLODED;
+            case CURRENT_STATE.WORKING:                  
+                if(this.RequestAdjustState()){
+                    if(this.TurnDirection !=2){
+                        SpaceShip.Turn(this.TurnDirection);
+                        RocketManager.playTurnAnimation();
                     }
-                }
-                    
-                this.RequestAdjustState()
-                if(this.TurnDirection !=2){
-                    SpaceShip.Turn(this.TurnDirection);
-                    RocketManager.playTurnAnimation();
-                }
-            
-                if(this.Accelerate){
-                    SpaceShip.Accelerate();
-                }
-                else{
-                    SpaceShip.Deaccelerate();
-                    
-                    if(this.Brake)
-                        SpaceShip.Brake();
+                
+                    if(this.Accelerate){
+                        SpaceShip.Accelerate();
+                    }
+                    else{
+                        SpaceShip.Deaccelerate();
+                        
+                        if(this.Brake)
+                            SpaceShip.Brake();
+                    }
                 }
             break;
             
