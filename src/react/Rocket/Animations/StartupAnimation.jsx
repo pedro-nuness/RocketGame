@@ -27,6 +27,13 @@ export default class RocketStartupAnimation extends Animation {
         this.startTime = 0;
     }
 
+    pauseAudios(){
+        if(this.audio)
+            this.audio.pause();
+        if(this.IgnitionAudio)
+            this.IgnitionAudio.pause();
+    }
+
     play() {
 
         if (!this.audio) {
