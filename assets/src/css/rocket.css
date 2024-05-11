@@ -1,8 +1,5 @@
 #rocket{
-
-   
     display: flex;
-
     position: absolute;
     height: 150px;
     width: 150px;
@@ -11,16 +8,12 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-
 }
 
 #rocket_img{
     height: 100%;
-
     object-fit: cover;
 }
-
-
 
 #rocket_smoke{
     position: absolute;

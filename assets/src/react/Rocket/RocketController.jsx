@@ -1,6 +1,7 @@
 // controller.jsx
 import Rocket from './Rocket.jsx'
-import RocketSpriteController from './RocketStateController.jsx';
+import RocketSpriteController from './RocketStateController.jsx'
+
 
 let RocketObj = document.getElementById("rocket");
 let RocketIMG = document.getElementById("rocket_img");
@@ -8,7 +9,7 @@ let RocketHeight = RocketIMG.offsetHeight;
 let Smoke = document.getElementById("rocket_smoke")
 
 
-var SpaceShip = new Rocket(100, 1, 2 , 1000, 3, 10)
+var SpaceShip = new Rocket(100, 1, 5 , 10000, 3, 10)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
@@ -40,7 +41,8 @@ const CURRENT_STATE = {
     WORKING: 4,
     STARTING_BOOST: 5,
     WOKING_BOOST: 6,
-    STOPPING_BOOST: 7
+    STOPPING_BOOST: 7,
+    EXPLODED: 8
 };
 
 function getRandomNumber(min, max) {
@@ -124,10 +126,25 @@ export default class Controller{
     
         switch(SpaceShip.GetCurrentState()){
 
+
+
             case CURRENT_STATE.WORKING:
                 RocketManager.playWorkingAnimation(SpaceShip.current_acceleration_step / SpaceShip.max_acceleration, SpaceShip.OnAcceleration);
-                if(SpaceShip.GetCurrentTemperature() >= SpaceShip.GetMaxTemperatureResistence())
-                    RocketManager.playOverHeatAnimation();
+
+                if(SpaceShip.GetCurrentTemperature() >= SpaceShip.GetMaxTemperatureResistence() * 0.8){
+                    RocketManager.StateGettingHot();
+                }
+
+       
+                RocketManager.playOverHeatAnimation(SpaceShip.GetCurrentTemperature(), SpaceShip.GetMaxTemperatureResistence());
+                
+
+                if(SpaceShip.Exploded){
+                    if(RocketManager.playExplostionAnimation()){
+                        SpaceShip.current_rocket_state = CURRENT_STATE.EXPLODED;
+                    }
+                }
+                    
                 this.RequestAdjustState()
                 if(this.TurnDirection !=2){
                     SpaceShip.Turn(this.TurnDirection);
