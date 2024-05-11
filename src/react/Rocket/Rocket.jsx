@@ -78,6 +78,7 @@ export default class Rocket{
         this.rotation_radians = 0;
         this.OnAcceleration = false;
         this.CurrentTemperature = 24;
+        this.Exploded = false;
     }
 
     TurnBoost(){
@@ -118,9 +119,20 @@ export default class Rocket{
         if(this.current_height + this.vertical_speed >= 0){
             this.current_height += this.vertical_speed;
         }else{
-            //Crashed, then we initiate explosion animation
             this.current_height = 0;
+            //Crashed, then we initiate explosion animation
+            if(Math.abs(this.current_rotation_angle) > 5){
+              
+                this.Exploded = true;
+            }
+        }
+
+        if(this.CurrentTemperature > this.MaxHeatResistence * 1.5)
+            this.Exploded = true;
+
+        if(this.Exploded ){ 
             this.vertical_speed = 0;
+            this.horizontal_speed = 0;
             this.current_acceleration_step = 0;
         }
       
@@ -187,7 +199,7 @@ export default class Rocket{
         this.current_speed = calcularVelocidadeRealXY(this.vertical_speed, this.horizontal_speed);
 
         this.CurrentTemperature = ( this.current_speed + ( Math.pow(AirFriction, this.current_speed ) )  );
-        console.log(this.CurrentTemperature);
+
         this.AdjustRotation();    
         this.ApplyResistence();
     }

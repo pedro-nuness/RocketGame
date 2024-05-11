@@ -19,21 +19,41 @@ export default class OverHeatAnimation extends Animation{
         this.AlarmAudio = null;
     }
 
-    play(){
-        if(!this.SystemFailureAudio)
-            this.SystemFailureAudio = playSound(EngineFailure, 1)
-        if(!this.AlarmAudio)
-            this.AlarmAudio = playSound(Alarm, 1)
-
-        this.AlarmAudio.addEventListener('timeupdate', function(){
-            var buffer = .77
-            if(this.currentTime > this.duration - buffer){
-                this.currentTime = 0
-                this.play()
+    play(temperature, MaxTemperature){
+        if(temperature > MaxTemperature){
+            if(this.rocketImg.style.opacity < 1){
+                console.log(this.rocketImg.style.opacity)
+                this.rocketImg.style.opacity += 0.1;
             }
-        });
 
-        super.Animate('/sprites/RocketOverHeat/Smoke/sprites', 70, 11);
+            if(!this.SystemFailureAudio)
+                this.SystemFailureAudio = playSound(EngineFailure, 1)
+            if(!this.AlarmAudio){
+                this.AlarmAudio = playSound(Alarm, 1)
+
+                this.AlarmAudio.addEventListener('timeupdate', function(){
+                    this.loop = true;
+                });
+            }
+
+            super.Animate('/sprites/RocketOverHeat/Smoke/sprites', 70, 11);
+        }
+        else{
+
+            if(this.rocketImg.style.opacity){
+                super.Animate('/sprites/RocketOverHeat/Smoke/sprites', 70, 11);
+                this.rocketImg.style.opacity *= 0.99;
+            }
+            if(this.SystemFailureAudio)
+                this.SystemFailureAudio.pause();
+
+            if(this.AlarmAudio){
+                this.AlarmAudio.addEventListener('timeupdate', function(){
+                    this.loop = false;
+                    this.pause();
+                });            
+            }
+        }
     }
 
 }
