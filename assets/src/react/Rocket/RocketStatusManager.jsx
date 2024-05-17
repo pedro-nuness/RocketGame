@@ -8,7 +8,7 @@ function GenerateStatus(type, message){
             <> 
              <div className="rocket_status_box">
                 <div className="rocket_status_img">
-                <img className="rocket_status_img_warning" src="./img/waning.webp">
+                <img className="rocket_status_img_warning" src="./img/warning.webp">
                 </img>     
                 </div>
         

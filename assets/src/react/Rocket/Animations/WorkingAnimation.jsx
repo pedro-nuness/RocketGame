@@ -1,5 +1,6 @@
 import Animation from "./Animation"
 import EngineWorking from '/audio/Engine/engine_working_fit.mp3'
+import TurbineSound from '/audio/Engine/TurbineSound.mp3'
 
 function playSound(Obj, volume) {
     //  let audio = new Audio('file/pong.mp3');
@@ -25,14 +26,31 @@ export default class RocketWorkingAnimation extends Animation{
     pauseAudios(){
         if(this.WorkingAudio)
             this.WorkingAudio.pause();
+        if(this.TurbineSound)
+            this.TurbineSound.pause();
     }
 
     play(AccelerationPercentage, Accelerating){
     
-        if(this.WorkingAudio)
-            this.WorkingAudio.volume = Math.max(AccelerationPercentage, 0.1) ;
-        else
+ 
+        if(!this.WorkingAudio){
             this.WorkingAudio = playSound(EngineWorking, 1)
+        }
+
+        if(!this.TurbineSound){
+            this.TurbineSound = playSound(TurbineSound, 1);
+        }else{
+            this.TurbineSound.volume = AccelerationPercentage * 0.6;
+
+            //Correct time gap on loop
+            this.TurbineSound.addEventListener('timeupdate', function(){
+                var buffer = .44
+                if(this.currentTime > this.duration - buffer){
+                    this.currentTime = 0
+                    this.play()
+                }
+            });
+        }
 
         if(this.WasAccelerating != Accelerating){
 
@@ -59,33 +77,31 @@ export default class RocketWorkingAnimation extends Animation{
 
         if(this.InitializedAcceleration){
            
-            this.WorkingAudio.play();   
+            this.WorkingAudio.volume = Math.min(this.WorkingAudio.volume + 0.05, 1);
 
-            if(this.currentSpriteIdx == 4)
+            if(this.currentSpriteIdx < 4){
+                super.Animate('/sprites/RocketTurning/RocketTurningOn/sprites', 50, 4);
+            }else if(this.WorkingAudio.volume == 1)
                 this.InitializedAcceleration = false;
 
-            super.Animate('/sprites/RocketTurning/RocketTurningOn/sprites', 50, 4);
             return;
         }
 
-        if(this.InitializedSlowDown){
-            if(this.WorkingAudio)
-                this.WorkingAudio.pause();   
-
-            if(this.currentSpriteIdx == 4)
+        if(this.InitializedSlowDown){     
+            this.WorkingAudio.volume = Math.max(this.WorkingAudio.volume - 0.05, 0);   
+        
+            if(this.currentSpriteIdx < 4 ){
+                super.Animate('/sprites/RocketTurning/RocketTurningOff/sprites', 100, 4);
+            }else if(!this.WorkingAudio.volume)
                 this.InitializedSlowDown = false;
 
-            super.Animate('/sprites/RocketTurning/RocketTurningOff/sprites', 100, 4);
             return;
         }
 
 
         
         if(Accelerating){
-
-            if(this.WorkingAudio == null){
-                this.WorkingAudio = playSound(EngineWorking, 1)
-            }
+           
 
             //Correct time gap on loop
             this.WorkingAudio.addEventListener('timeupdate', function(){

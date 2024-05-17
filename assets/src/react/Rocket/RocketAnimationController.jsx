@@ -31,7 +31,7 @@ class RocketSpriteController {
     playExplostionAnimation(){  
         if(!this.ResetedAnimations){
             this.HeatAnimation.rocketImg.style.opacity = 0;
-            this.ExplostionAnimation.rocketImg.style.height = '200%'
+            this.ExplostionAnimation.rocketImg.style.height = '250%'
             this.WorkingAnimation.pauseAudios();
             this.HeatAnimation.pauseAudios();
             this.StartupAnimation.pauseAudios();
