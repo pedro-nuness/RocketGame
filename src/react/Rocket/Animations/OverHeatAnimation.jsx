@@ -34,17 +34,18 @@ export default class OverHeatAnimation extends Animation{
     }
 
     play(temperature, MaxTemperature){
-        if(temperature > MaxTemperature * 0.8){
+        if(temperature > MaxTemperature * 0.95){
             if(!this.HotWarningAudio){
                 this.HotWarningAudio = playSound(WarningAudio, 1);
 
                 this.HotWarningAudio.addEventListener('timeupdate', function(){
                     this.loop = true;
                 });
-            }
+            }else
+                this.HotWarningAudio.volume = Math.min(this.HotWarningAudio.volume + 0.1, 1);     
 
         }else if(this.HotWarningAudio){
-            this.HotWarningAudio.pause();     
+           this.HotWarningAudio.volume = Math.max(this.HotWarningAudio.volume - 0.1, 0);     
         }  
 
         if(temperature > MaxTemperature){
@@ -57,13 +58,17 @@ export default class OverHeatAnimation extends Animation{
 
             if(!this.SystemFailureAudio)
                 this.SystemFailureAudio = playSound(EngineFailure, 1)
+            else
+                this.SystemFailureAudio.volume = Math.min(this.SystemFailureAudio.volume + 0.1, 1);     
+                
             if(!this.AlarmAudio){
                 this.AlarmAudio = playSound(Alarm, 1)
 
                 this.AlarmAudio.addEventListener('timeupdate', function(){
                     this.loop = true;
                 });
-            }
+            }else
+                this.AlarmAudio.volume = Math.min(this.AlarmAudio.volume + 0.1, 1);   
 
             super.Animate('/sprites/RocketOverHeat/Smoke/sprites', 70, 11);
         }
@@ -73,13 +78,10 @@ export default class OverHeatAnimation extends Animation{
                 this.rocketImg.style.opacity *= 0.99;
             }
             if(this.SystemFailureAudio)
-                this.SystemFailureAudio.pause();
+                this.SystemFailureAudio.volume = Math.max(this.SystemFailureAudio.volume - 0.1, 0);     
 
             if(this.AlarmAudio){
-                this.AlarmAudio.addEventListener('timeupdate', function(){
-                    this.loop = false;
-                    this.pause();
-                });            
+                this.AlarmAudio.volume = Math.max(this.AlarmAudio.volume - 0.1, 0);              
             }
         }
 

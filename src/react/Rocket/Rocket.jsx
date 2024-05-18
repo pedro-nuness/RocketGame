@@ -56,9 +56,10 @@ export default class Rocket{
         //Aerodinamics is like a little adjust
         //The higher the aerodinamics, it'll take longer to slow down
         //And will acellerate faster
-        this.aerodinamics = aerodinamics;
+        this.base_aerodinamics = aerodinamics;
+        this.aerodinamics = 0;
 
-        this.MaxHeatResistence = 1650;
+        this.MaxHeatResistence = 10000;
 
         //CurrentStates of the rocket
         this.current_speed = 0;
@@ -77,8 +78,11 @@ export default class Rocket{
         this.current_acceleration_step = 0;
         this.rotation_radians = 0;
         this.OnAcceleration = false;
-        this.CurrentTemperature = 24;
+        this.WorldTemperature = 24;
+        this.CurrentTemperature = 0;
         this.Exploded = false;
+        this.GasCapacity = 1000;
+        this.Gas = 1000;
     }
 
     TurnBoost(){
@@ -109,42 +113,57 @@ export default class Rocket{
         }
     }
 
-    AdjustHeight(){    
+    AdjustHeight() {
+        // Gradually adjust the rotation angle
+        const targetRotationAngle = calcularAngulo(this.horizontal_speed, this.vertical_speed);
+        let angleDifference = Math.abs(targetRotationAngle - this.current_rotation_angle);
+    
+        // Ajustar a diferença angular para estar no intervalo de 0 a 180 graus
+        if (angleDifference > 180) {
+            angleDifference = 360 - angleDifference;
+        }
+    
+        // Quanto menor a diferença angular, maior a aerodinâmica
+        // Invertendo a lógica para que a aerodinâmica seja maior quando o ângulo for menor
+        this.aerodinamics = this.base_aerodinamics * (1 - angleDifference / 180);
+    
         //km/h
-        if(this.current_height + this.vertical_speed >= 0){
-            this.current_height += this.vertical_speed;
-        }else{
+        let VMMs = (this.vertical_speed);
+        let HMMs = (this.horizontal_speed);
+    
+        if (this.current_height + VMMs >= 0) {
+            this.current_height += VMMs;
+        } else {
             this.current_height = 0;
-            //Crashed, then we initiate explosion animation
-            if(Math.abs(this.current_rotation_angle) > 5){
+            // Crashed, then we initiate explosion animation
+            if (Math.abs(this.current_rotation_angle) > 5) {
                 this.vertical_speed = 0;
                 this.horizontal_speed = 0;
                 this.Exploded = true;
             }
         }
-
-        if(this.CurrentTemperature > this.MaxHeatResistence * 1.5)
+    
+        if (this.CurrentTemperature > this.MaxHeatResistence * 3){
             this.Exploded = true;
-
-        if(this.Exploded ){ 
+        }
+    
+        if (this.Exploded) { 
             this.CurrentTemperature = 24;    
             this.current_acceleration_step = 0;
-            if(this.vertical_speed)
-                this.vertical_speed *= 0.95;
-            if(this.horizontal_speed)
-                this.horizontal_speed *= 0.95;
-        }else if(this.current_height > 0) {
-            if(this.vertical_speed < this.max_speed * 0.9){
-                if(this.vertical_speed < this.max_speed * 0.3)
-                   RocketManager.GenerateCriticalStatus("Low speed")
-                   else if(this.vertical_speed < this.max_speed * 0.65)
-                   RocketManager.GenerateWarningStatus("Low speed")
+            this.vertical_speed *= 0.95;
+            this.horizontal_speed *= 0.95;
+        } else if (this.current_height > 0) {
+            if (this.vertical_speed < this.max_speed * 0.9) {
+                if (this.vertical_speed < this.max_speed * 0.3)
+                    RocketManager.GenerateCriticalStatus("Low speed")
+                else if (this.vertical_speed < this.max_speed * 0.65)
+                    RocketManager.GenerateWarningStatus("Low speed")
             }
         }
-      
-        this.current_horizontal_position += this.horizontal_speed ; 
-
+    
+        this.current_horizontal_position += HMMs;
     }
+    
 
 
     Turn(direction){
@@ -184,25 +203,61 @@ export default class Rocket{
         if(this.current_height > 5){
             this.vertical_speed -= Gravity * 0.2;
             if(this.horizontal_speed.toFixed() >= 1){
-                this.horizontal_speed -= AirFriction * Math.sin(this.rotation_radians)
+                this.horizontal_speed -= AirFriction * Math.cos(this.rotation_radians);
             }
         }
     }
 
+    calculateTemperature(accelerationFactor) {
+        // Constantes (ajuste conforme necessário)
+        const coeficienteDeArrasto = 0.5;
+        const densidadeDoAr = 1.225; // kg/m^3 ao nível do mar
+        const areaFrontal = 1.0; // m^2, ajuste conforme o tamanho do foguete
+        const fatorDeConversao = 0.01; // Arbitrário para simplificação
+    
+        // Calcular o arrasto (drag)
+        var arrasto = 0.5 * coeficienteDeArrasto * densidadeDoAr * Math.pow(this.current_speed / 36, 2) * areaFrontal;
+    
+        // Calcular a temperatura devido ao arrasto
+        var temperaturaArrasto = arrasto * fatorDeConversao; // Fator de conversão para temperatura
+    
+        // Ajustar a contribuição da aceleração
+        temperaturaArrasto *= accelerationFactor;
+    
+        // Calcular a temperatura final do foguete
+        var temperaturaFinal = this.CurrentTemperature + temperaturaArrasto;
+    
+        return temperaturaFinal;
+    }
+    
+    CoolDown() {
+        // Simula a dissipação de calor, ajustando conforme necessário
+        const coolingRate = 0.999; // Fator de resfriamento
+        this.CurrentTemperature = Math.max(this.WorldTemperature, this.CurrentTemperature * coolingRate);
+    }
+    
     AdjustSpeed(){
         //Adjust the speed acording to the current acceleration step
         //The current speed uses a logic based on %, it takes the max speed and the acceleration as reference
         this.current_speed = calcularVelocidadeRealXY(this.vertical_speed, this.horizontal_speed);
-
-        this.CurrentTemperature = ( this.current_speed + ( Math.pow(AirFriction, this.current_speed ) )  );
-
+        
+         
+       
         this.AdjustRotation();    
         this.ApplyResistence();
+
+        // Atualiza a temperatura atual do foguete
+        if (this.OnAcceleration) {
+            this.CurrentTemperature = this.calculateTemperature(0.5); // Considera meio passo de aceleração
+        } else {
+            this.CoolDown();
+        }
     }
 
 
 
     Brake(){
+        this.CurrentTemperature *= 0.95;
         this.OnAcceleration = false;
         if(this.current_acceleration_step > this.brakeforce)
             this.current_acceleration_step -= this.brakeforce;
@@ -211,42 +266,32 @@ export default class Rocket{
 
     }
 
-    Accelerate(){
+    Accelerate() {
         this.OnAcceleration = true;
-        document.getElementById("rocket").style.transition= "0s";
-        //increse the acceleration step
-        //added checks, so we don't extrapolate max speed     
-        if(this.current_acceleration_step < this.max_acceleration - this.acceleration * this.aerodinamics){
-            this.current_acceleration_step += this.acceleration * this.aerodinamics;
-        }
-        else
-            this.current_acceleration_step = this.max_acceleration;
+        document.getElementById("rocket").style.transition = "0s";
 
+        // Incrementa o passo de aceleração, respeitando a velocidade máxima
+        this.current_acceleration_step = Math.min(this.current_acceleration_step + (this.acceleration * this.acceleration_power), this.max_acceleration);
         this.AdjustSpeed();
 
+        // Atualiza as velocidades vertical e horizontal com base na aceleração atual
+        this.vertical_speed = Math.min(this.vertical_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.cos(this.rotation_radians), this.max_speed);
+        this.horizontal_speed = Math.min(this.horizontal_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.sin(this.rotation_radians), this.max_speed);
 
-        // Update the vertical and horizontal speeds based on the change
-    
-        this.vertical_speed= Math.min( this.vertical_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.cos(this.rotation_radians), this.max_speed)
-        this.horizontal_speed = Math.min( this.horizontal_speed + (this.acceleration_power * (this.current_acceleration_step / this.max_acceleration)) * Math.sin(this.rotation_radians), this.max_speed)
+        // Atualiza a temperatura atual do foguete
+        this.CurrentTemperature = this.calculateTemperature(1.0); // Considera aceleração total
     }
 
-    Deaccelerate(){    
+    Deaccelerate() {
         this.OnAcceleration = false;
-        //decrease the acceleration step
-          //added checks, so we don't get acceleration under 0
-        if(this.current_acceleration_step - this.acceleration / this.aerodinamics > 0)
-            this.current_acceleration_step -= this.acceleration / this.aerodinamics;
-        else
-            this.current_acceleration_step = 0;
 
-       
+        // Diminui o passo de aceleração, respeitando o limite inferior de zero
+        this.current_acceleration_step = Math.max(this.current_acceleration_step - (this.acceleration / this.acceleration_power), 0);
         this.AdjustSpeed();
-        
+
         // Gradually adjust the rotation angle
         const targetRotationAngle = calcularAngulo(this.horizontal_speed, this.vertical_speed);
-
-        const rotationStep = 0.1; // You can adjust the step size as needed
+        const rotationStep = 0.1; // Ajuste conforme necessário
         if (Math.abs(this.current_rotation_angle - targetRotationAngle) > rotationStep) {
             if (this.current_rotation_angle < targetRotationAngle) {
                 this.current_rotation_angle += rotationStep;
@@ -257,6 +302,9 @@ export default class Rocket{
             this.current_rotation_angle = targetRotationAngle;
         }
         this.AdjustRotation();
+
+        // Resfria a temperatura atual do foguete
+        this.CoolDown();
     }
     
 

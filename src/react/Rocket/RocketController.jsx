@@ -9,7 +9,7 @@ let RocketHeight = RocketIMG.offsetHeight;
 let Smoke = document.getElementById("rocket_smoke")
 
 
-var SpaceShip = new Rocket(100, 1, 5 , 10000, 3, 10)
+var SpaceShip = new Rocket(100, 1, 20 , 10000, 5, 10)
 
 let RocketManager = new RocketSpriteController(SpaceShip);
 
@@ -183,14 +183,18 @@ export default class Controller{
         //Starts on left, got do it for the right side, start on -89
         //Max = -89deg
         let Neddle = document.getElementById(Velocimeter);
-        let Angle = Math.min(( SpeedPercentage * 0.85 ) * 2, 170);
+        let Angle = ( SpeedPercentage * 1.25 ) * 2;
        
-        if(SpeedPercentage >= 99){
+        if(SpeedPercentage >= 95){
             //Neddle shake on high speeds
             Angle += getRandomNumber(-1, 1);
         }
 
         Neddle.style.rotate = Angle + "deg";
+    }
+
+    ControlBar(Bar, Percentage){
+        document.getElementById(Bar).style.height = Percentage + "%";
     }
 };
 
@@ -207,7 +211,6 @@ function calcularVelocidadeRealXY(velocidadeX, velocidadeY) {
 
 function Update(){
 
- 
     let FixedHeight = SpaceShip.GetHeight() / 40;
     let FixedHorizontal = -SpaceShip.GetHorizontalPosition() / 40;
     document.body.style.backgroundPositionY = FixedHeight +'px';
@@ -217,12 +220,11 @@ function Update(){
     let CurrentSpeed = calcularVelocidadeRealXY(SpaceShip.GetHorizontalSpeed(), SpaceShip.GetVerticalSpeed()) /  SpaceShip.GetMaxSpeed() * 100;
 
     Control.ControlVelocimeter("speed_neddle", CurrentSpeed);
+    Control.ControlVelocimeter("acceleration_neddle", CurrentAcceleration);
 
-    document.getElementById("acceleration").style.height = CurrentAcceleration + "%";
-    document.getElementById("speed").style.height = CurrentSpeed + "%";
-    document.getElementById("temperature").style.height = ( SpaceShip.GetCurrentTemperature() / 500 ) * 100 + "%";
-    
-
+    Control.ControlBar("aerodinamics", (SpaceShip.aerodinamics / SpaceShip.base_aerodinamics) * 100);
+    Control.ControlBar("gas", (SpaceShip.Gas / SpaceShip.GasCapacity ) * 100);
+    Control.ControlBar("temperature", ( SpaceShip.GetCurrentTemperature() / SpaceShip.GetMaxTemperatureResistence() ) * 100);
 
     Control.UpdateMovement();
   
